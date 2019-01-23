@@ -1,0 +1,44 @@
+﻿# If you want to fill this file with all available options run the following command:
+#   nscp settings --generate --add-defaults --load-all
+# If you want to activate a module and bring in all its options use:
+#   nscp settings --activate-module <MODULE NAME> --add-defaults
+# For details run: nscp settings --help
+
+
+; in flight - TODO
+[/settings/default]
+password = {{ nsclient_query_password }}
+allowed hosts=127.0.0.1,::1{% for item in monitoring_servers %},{{ hostvars[item]['ansible_default_ipv4']['address'] }} {% endfor %}
+
+[/modules]
+CheckExternalScripts = enabled
+CheckHelpers = disabled
+CheckEventLog = disabled
+CheckNSCP = enabled
+CheckDisk = enabled
+WEBServer = enabled
+CheckSystem = enabled
+NSClientServer = disabled
+NRPEServer = disabled
+
+[/settings/external scripts]
+allow arguments=true
+
+[/settings/external scripts/wrappings]
+ps1=powershell.exe -noprofile -noninteractive -command {{ nsclient_scripts_unc_path }}\%SCRIPT% %ARGS%
+
+[/settings/external scripts/wrapped scripts]
+lastinstWinUpdates=lastinstWinUpdates.ps1 $ARG1$ $ARG2$
+autoSvc=autoSvc.ps1 $ARG1$ $ARG2$
+
+; Web server - Section for WEB (WEBServer.dll) (check_WEB) protocol options.
+[/settings/WEB/server]
+
+; Definerer en rolle som heter 'nagios', med rettigeter '*'
+[/settings/WEB/server/roles]
+nagios=*
+
+; Definerer en bruker 'nagios' med rollen 'nagios'
+[/settings/WEB/server/users/nagios]
+password={{ nsclient_query_password }}
+role=nagios
