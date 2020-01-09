@@ -4,13 +4,13 @@
   win_template:
     src: nsclient_central.ini.j2
     dest: '{{ nsclient_central_config_path }}\nsclient_central.ini'
-  when: '"nsclient-fileserver" in group_names'
+  when: '"nsclient_fileserver" in group_names'
 
 - name: Copy powershell scripts
   win_copy:
     src: scripts
     dest: '{{ nsclient_central_config_path }}'
-  when: '"nsclient-fileserver" in group_names'
+  when: '"nsclient_fileserver" in group_names'
 
 - name: Create temp dir
   win_file:
@@ -61,28 +61,28 @@
     action: add
 
 # This is not optimal, but is the only way I know at the moment to make lasinstwinupdates to run properly
-- name: Add nsclient@kc.local to local administrators group on target host
+- name: Add nsclient to local administrators group on target host
   win_group_membership:
     name: Administrators
     members:
     - '{{ nsclient_user }}'
     state: present
 
-# # SeSystemProfilePrivilege: gives permission to gather system performance data (needed for the lastinstwinupdates check)
-# - name: Add neccessary privilegies to nsclient user
-#   win_user_right:
-#     name: SeSystemProfilePrivilege
-#     users:
-#     - '{{ nsclient_user }}'
-#     action: add
+# # # SeSystemProfilePrivilege: gives permission to gather system performance data (needed for the lastinstwinupdates check)
+# # - name: Add neccessary privilegies to nsclient user
+# #   win_user_right:
+# #     name: SeSystemProfilePrivilege
+# #     users:
+# #     - '{{ nsclient_user }}'
+# #     action: add
+# #
+# # - name: Add neccessary privilegies to nsclient user (SeProfileSingleProcessPrivilege)
+# #   win_user_right:
+# #     name: SeProfileSingleProcessPrivilege
+# #     users:
+# #     - '{{ nsclient_user }}'
+# #     action: add
 #
-# - name: Add neccessary privilegies to nsclient user (SeProfileSingleProcessPrivilege)
-#   win_user_right:
-#     name: SeProfileSingleProcessPrivilege
-#     users:
-#     - '{{ nsclient_user }}'
-#     action: add
-
 - name: Restart NSClient service
   win_service:
     name: nscp

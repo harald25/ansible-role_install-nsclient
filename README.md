@@ -9,8 +9,8 @@ The central config file is hosted on a file share in the network. All changes to
 Requirements
 ------------
 
-The file server that will store the central config and scripts must be placed in a group named 'nsclient-fileserver'
-The nagios server must be placed in a group named 'monitoring-servers'
+The file server that will store the central config and scripts must be placed in a group named 'nsclient_fileserver'
+The nagios server must be placed in a group named 'monitoring_servers'
 
 Role Variables
 --------------
